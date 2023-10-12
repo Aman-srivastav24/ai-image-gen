@@ -15,15 +15,16 @@ router.get('/',(req,res)=>{
 router.route('/').post(async(req,res)=>{
 try {
     const {prompt} = req.body;
-
-    const aiResponse = await openai.createImage({
+    console.log("prompt:" ,prompt)
+    const aiResponse = await openai.images.generate({
         prompt,
         n:1,
         size:'1024x1024',
-        response_format:'b64_json'
+        response_format:'url'
     })
-
-    const image = aiResponse.data.data[0].b64_json;
+    // console.log(aiResponse)
+    const image = aiResponse.data[0].url;
+console.log(image)
     res.status(200).json({photo:image});
 
 } catch (error) {

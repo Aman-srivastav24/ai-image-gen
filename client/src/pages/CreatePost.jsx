@@ -4,6 +4,7 @@ import { preview } from '../assets'
 import{getRandomPrompt} from '../utils'
 import { FormField , Loader } from '../components'
 
+
 function CreatePost() {
   const navigate = useNavigate();
   const [form, setform] = useState({
@@ -25,7 +26,29 @@ function CreatePost() {
       const randomPrompt = getRandomPrompt(form.prompt);
       setform({...form, prompt: randomPrompt})
   }
-  const generateImg = ()=>{
+  const generateImg =async ()=>{
+    console.log(form.prompt)
+  if(form.prompt){
+    try {
+      setGeneratingImg(true);
+      const response = await fetch("http://localhost:8080/api/v1/dalle",{
+        method: 'POST',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({prompt: form.prompt})
+      })
+      const data = await response.json();
+      console.log(data)
+      setform({...form ,photo:data.photo})
+    } catch (error) {
+      alert(error)
+    }finally{
+      setGeneratingImg(false)
+    }
+  } else{
+    alert('Pls Enter a Prompt ...')
+  }
 
   }
 return (
